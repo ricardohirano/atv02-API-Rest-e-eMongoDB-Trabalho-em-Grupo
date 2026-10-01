@@ -12,6 +12,7 @@ class obraService{
             throw error
         }
     }
+
     async getObraById(id){
         try{
             const obra = await Obra.findOne({_id:id})
@@ -21,6 +22,7 @@ class obraService{
             throw error
         }
     }
+
     async create(titulo, tecnica, movimento, imagem, ano, artistaId, acervo){
     try{
         const novaObra = new Obra({titulo, tecnica, movimento, imagem, ano, artistaId, acervo })
@@ -32,6 +34,26 @@ class obraService{
     }    
     }
 
+    async update(id, titulo, tecnica, movimento, imagem, ano, artistaId, acervo){
+        try{
+            const obraAtualizada = await Obra.findByIdAndUpdate(id, {titulo, tecnica, movimento, imagem, ano, artistaId, acervo}, {new:true, runValidators: true})
+            return obraAtualizada
+        } catch(error){
+            console.log(error)
+            throw error
+        }
+
+    }
+    
+    async delete(id){
+        try{
+            const obraDeletada = await Obra.findByIdAndDelete(id)
+            return obraDeletada
+        } catch(error){
+            console.log(error)
+            throw error
+        }
+    }
 }
 
 export default new obraService();

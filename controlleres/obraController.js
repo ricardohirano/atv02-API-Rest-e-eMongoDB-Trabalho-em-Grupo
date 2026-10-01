@@ -48,4 +48,40 @@ const createObra = async(req,res) => {
     }
 }
 
-export default {getAllObras, getObraById, createObra};
+const updateObra = async(req,res) => {
+    try{
+        const id = req.params.id
+        if(ObjectId.isValid(id)){
+            const {titulo, tecnica, movimento, imagem, ano, artistaId, acervo} = req.body
+            const obraAtualizada = await obraService.update(id, titulo, tecnica, movimento, imagem, ano, artistaId, acervo)
+            res.status(200).json({obra: obraAtualizada})
+        }else{
+            res.status(400).json({error : "ID invalido"})
+        }
+    } catch(error){
+        if(error.name === "ValidationError" || error.name === "CastError"){
+            return res.status(400).json({error : error.message})
+        }
+        console.log(error)
+        res.status(500).json({error : "Erro interno do servidor"})
+    }
+}
+
+const deleteObra = async(req,res) => {
+    const id = req.params.id
+    try{
+        if(!ObjectId.isValid(id)){
+            return res.status(400).json({error : "ID invalido"})
+        }
+        const obra = await obraService.delete(id)
+        if(!obra){
+            return res.status(404).json({error : "Obra não encontrada"})
+        }
+        res.sendStatus(204)
+    } catch(error){
+        console.log(error)
+        res.status(500).json({error : "Erro interno do servidor"})
+    }
+}
+
+export default {getAllObras, getObraById, createObra, updateObra, deleteObra};

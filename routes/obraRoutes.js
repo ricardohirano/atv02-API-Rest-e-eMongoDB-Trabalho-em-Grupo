@@ -5,6 +5,7 @@ const obraRoutes = express.Router()
 
 obraRoutes.get("/obras", obraController.getAllObras)
 obraRoutes.get("/obra/:id", obraController.getObraById)
+obraRoutes.post("/obras", obraController.createObra)
 
 
 export default obraRoutes

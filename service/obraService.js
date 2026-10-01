@@ -5,11 +5,20 @@ class obraService{
     async getAll(){
         try{
             const obras = await Obra.find();
-            console.log(Obra.collection.name)
-            console.log(obras.length)
+
             return obras
         } catch(error){
             console.log(error);
+            throw error
+        }
+    }
+    async getObraById(id){
+        try{
+            const obra = await Obra.findOne({_id:id})
+            return obra
+        } catch(error){
+            console.log(error)
+            throw error
         }
     }
 }

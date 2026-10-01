@@ -31,6 +31,21 @@ const getObraById = async (req,res) =>{
         console.log(error)
         res.status(500).json({error : "Erro interno do servidor"})
     }
-} 
+}
 
-export default {getAllObras, getObraById};
+const createObra = async(req,res) => {
+    try{
+        const{titulo, tecnica, movimento, imagem, ano, artistaId, acervo} = req.body
+        const obra = await obraService.create(titulo, tecnica, movimento, imagem, ano, artistaId, acervo)
+        res.status(201).json({obra})
+    }catch (error){
+        // verificamento se o erro foi algo no formulario
+        if(error.name === "ValidationError"){
+            return res.status(400).json({error : error.message })
+        }
+        console.log(error)
+        res.status(500).json({error : "Erro interno do servidor"})
+    }
+}
+
+export default {getAllObras, getObraById, createObra};

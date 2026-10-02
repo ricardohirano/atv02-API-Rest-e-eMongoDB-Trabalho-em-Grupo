@@ -2,6 +2,7 @@ import "dotenv/config"
 import express from "express"
 import "./config/db-connection.js"
 import obraRoutes from "./routes/obraRoutes.js"
+import artistaRoutes from "./routes/artistaRoutes.js"
 
 const app = express()
 app.use(express.urlencoded({ extended: false}))
@@ -9,6 +10,7 @@ app.use(express.urlencoded({ extended: false}))
 app.use(express.json())
 
 app.use("/", obraRoutes)
+app.use("/", artistaRoutes)
 
 // Rota de teste, só para confirmar que o servidor está no ar
 app.get("/", (req, res) => {

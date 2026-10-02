@@ -8,6 +8,6 @@ const artistaSchema = new mongoose.Schema({
     morte: Date 
 })
 
-const artista = mongoose.model("Artista", artistaSchema)
+const Artista = mongoose.model("Artista", artistaSchema)
 
-export default artista
+export default Artista

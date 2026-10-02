@@ -2,7 +2,7 @@ import Obra from "../models/Obras.js"
 
 
 class obraService{
-    async getAll(){
+    async getObras(){
         try{
             const obras = await Obra.find();
 

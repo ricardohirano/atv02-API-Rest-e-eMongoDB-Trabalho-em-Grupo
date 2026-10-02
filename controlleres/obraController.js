@@ -1,9 +1,9 @@
 import obraService from "../service/obraService.js"
 import {ObjectId} from "mongodb"
 
-const getAllObras = async (req,res) => {
+const getObras = async (req,res) => {
     try{
-        const obras = await obraService.getAll();
+        const obras = await obraService.getObras();
         res.status(200).json({obras : obras})
     } catch (error){
         console.log(error)
@@ -84,4 +84,4 @@ const deleteObra = async(req,res) => {
     }
 }
 
-export default {getAllObras, getObraById, createObra, updateObra, deleteObra};
+export default {getObras, getObraById, createObra, updateObra, deleteObra};

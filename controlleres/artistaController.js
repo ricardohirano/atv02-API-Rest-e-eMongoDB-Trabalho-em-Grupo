@@ -59,4 +59,20 @@ const updateArtista = async (req,res) =>{
             return res.status(500).json({error : "Erro interno do servidor"})
     }
 }
-export default {getArtistas, getArtistaById, createArtista, updateArtista }
+const deleteArtista = async (req, res) => {
+    const id = req.params.id
+    try{
+        if(!ObjectId.isValid(id)){
+            return res.status(400).json({error : "ID invalido"})
+        }
+        const artista = await artistaService.delete(id)
+        if(!artista){
+            return res.status(404).json({error : "Artista nao encontrado"})
+        }
+        return res.sendStatus(204)
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({error : "Erro interno do servidor"})
+    }
+}
+export default {getArtistas, getArtistaById, createArtista, updateArtista,deleteArtista }

@@ -45,6 +45,15 @@ class artistaService{
             throw error
         }
     }
+
+    async delete(id){
+        try{
+            return await Artista.findByIdAndDelete(id)
+        }catch(error){
+            console.log(error)
+            throw error
+        }
+    }
 }
 
 export default new artistaService()

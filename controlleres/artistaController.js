@@ -28,5 +28,17 @@ const getArtistaById = async (req, res) => {
         res.status(500).json({error : "Error interno do servidor"})
     }
 }
-
-export default {getArtistas, getArtistaById }
+const createArtista = async (req,res) =>{
+    const {nome, cidadeNatal, nascimento, morte} = req.body
+    try{
+        const artista = await artistaService.create(nome, cidadeNatal, nascimento, morte)
+        res.status(201).json({artista})
+    }catch(error){
+        if(error.name === "ValidationError" || error.name === "CastError"){
+            return res.status(400).json({error : error.message})
+        }
+        console.log(error)
+        res.status(500).json({error: "Erro interno do servidor"})
+    }
+}
+export default {getArtistas, getArtistaById, createArtista }

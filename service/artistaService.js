@@ -20,6 +20,17 @@ class artistaService{
             throw error
         }
     }
+
+    async create(nome, cidadeNatal, nascimento, morte){
+        try{
+            const novoArtista= new Artista({nome, cidadeNatal, nascimento, morte})
+            await novoArtista.save()
+            return novoArtista
+        }catch(error){
+            console.log(error)
+            throw error
+        }
+    }
 }
 
 export default new artistaService()

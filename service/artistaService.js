@@ -31,6 +31,20 @@ class artistaService{
             throw error
         }
     }
+
+    async update(id,nome, cidadeNatal, nascimento, morte){
+        try{
+            const artistaAtualizado = await Artista.findByIdAndUpdate(
+            id,
+            {nome, cidadeNatal, nascimento, morte},
+            {new: true, runValidators: true}
+        )
+        return artistaAtualizado
+        }catch(error){
+            console.log(error)
+            throw error
+        }
+    }
 }
 
 export default new artistaService()

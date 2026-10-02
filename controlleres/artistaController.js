@@ -43,19 +43,20 @@ const createArtista = async (req,res) =>{
 }
 const updateArtista = async (req,res) =>{
     const id = req.params.id
+    const {nome, cidadeNatal, nascimento, morte} = req.body
     try{
         const artista = await artistaService.update(id, nome, cidadeNatal, nascimento, morte)
         if(!artista){
-            res.status(404).json({ error : "Artista não encontrado"})
+            return res.status(404).json({ error : "Artista não encontrado"})
         }else{
-            res.status(200).json({artista})
+            return res.status(200).json({artista})
         }
     }catch(error){
         if(error.name === "ValidationError" || error.name === "CastError"){
-            res.status(400).json({error : error.message})
+            return res.status(400).json({error : error.message})
         }
         console.log(error)
-        res.status(500).json({error : "Erro interno do servidor"})
+            return res.status(500).json({error : "Erro interno do servidor"})
     }
 }
 export default {getArtistas, getArtistaById, createArtista, updateArtista }

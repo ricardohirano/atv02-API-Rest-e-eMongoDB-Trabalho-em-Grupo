@@ -3,9 +3,9 @@ import obraController from '../controlleres/obraController.js'
 
 const obraRoutes = express.Router()
 
-obraRoutes.get("/obras", obraController.getObras)
+obraRoutes.get("/obra", obraController.getObras)
 obraRoutes.get("/obra/:id", obraController.getObraById)
-obraRoutes.post("/obras", obraController.createObra)
+obraRoutes.post("/obra", obraController.createObra)
 obraRoutes.put("/obra/:id", obraController.updateObra)
 obraRoutes.delete("/obra/:id", obraController.deleteObra)
 

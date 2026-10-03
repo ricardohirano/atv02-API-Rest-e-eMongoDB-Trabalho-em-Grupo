@@ -1,0 +1,532 @@
+paths:
+  /obra:
+    get:
+      tags:
+      - Obras
+      summary: Lista todas as obras
+      responses:
+        200:
+          description: Lista de obras
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  obras:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 665f1a2b3c4d5e6f7a8b9d01
+                        titulo:
+                          type: string
+                          example: Abaporu
+                        tecnica:
+                          type: string
+                          example: Óleo sobre tela
+                        movimento:
+                          type: string
+                          example: Modernismo
+                        imagem:
+                          type: string
+                          example: https://exemplo.com/abaporu.jpg
+                        ano:
+                          type: integer
+                          example: 1928
+                        artistaId:
+                          type: string
+                          example: 665f1a2b3c4d5e6f7a8b9c01
+                        acervo:
+                          type: object
+                          required:
+                          - instituicao
+                          properties:
+                            instituicao:
+                              type: string
+                              example: MASP
+                            localizacao:
+                              type: string
+                              example: São Paulo, SP
+                            formaAquisicao:
+                              type: string
+                              example: Doação
+                            anoAquisicao:
+                              type: integer
+                              example: 1947
+                            _id:
+                              type: string
+                              readOnly: true
+                              example: 6ac040fa4aa555444559f914
+                      required:
+                      - titulo
+                      - ano
+                      - artistaId
+        500:
+          description: Erro interno do servidor
+    post:
+      tags:
+      - Obras
+      summary: Cadastra uma obra
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - titulo
+              - ano
+              - artistaId
+              properties:
+                titulo:
+                  type: string
+                  example: Abaporu
+                tecnica:
+                  type: string
+                  example: Óleo sobre tela
+                movimento:
+                  type: string
+                  example: Modernismo
+                imagem:
+                  type: string
+                  example: https://exemplo.com/abaporu.jpg
+                ano:
+                  type: integer
+                  example: 1928
+                artistaId:
+                  type: string
+                  example: 665f1a2b3c4d5e6f7a8b9c01
+                acervo:
+                  type: object
+                  required:
+                  - instituicao
+                  properties:
+                    instituicao:
+                      type: string
+                      example: MASP
+                    localizacao:
+                      type: string
+                      example: São Paulo, SP
+                    formaAquisicao:
+                      type: string
+                      example: Doação
+                    anoAquisicao:
+                      type: integer
+                      example: 1947
+                    _id:
+                      type: string
+                      readOnly: true
+                      example: 6ac040fa4aa555444559f914
+      responses:
+        201:
+          description: Obra criada com sucesso
+        400:
+          description: Dados inválidos (campo obrigatório ausente, tipo errado ou ID inválido)
+        500:
+          description: Erro interno do servidor
+  /obra/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: ID do registro (ObjectId do MongoDB)
+    get:
+      tags:
+      - Obras
+      summary: Busca uma obra pelo ID
+      responses:
+        200:
+          description: Encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  obra:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 665f1a2b3c4d5e6f7a8b9d01
+                      titulo:
+                        type: string
+                        example: Abaporu
+                      tecnica:
+                        type: string
+                        example: Óleo sobre tela
+                      movimento:
+                        type: string
+                        example: Modernismo
+                      imagem:
+                        type: string
+                        example: https://exemplo.com/abaporu.jpg
+                      ano:
+                        type: integer
+                        example: 1928
+                      artistaId:
+                        type: string
+                        example: 665f1a2b3c4d5e6f7a8b9c01
+                      acervo:
+                        type: object
+                        required:
+                        - instituicao
+                        properties:
+                          instituicao:
+                            type: string
+                            example: MASP
+                          localizacao:
+                            type: string
+                            example: São Paulo, SP
+                          formaAquisicao:
+                            type: string
+                            example: Doação
+                          anoAquisicao:
+                            type: integer
+                            example: 1947
+                          _id:
+                            type: string
+                            readOnly: true
+                            example: 6ac040fa4aa555444559f914
+                    required:
+                    - titulo
+                    - ano
+                    - artistaId
+        400:
+          description: ID em formato inválido
+        404:
+          description: Registro não encontrado
+        500:
+          description: Erro interno do servidor
+    put:
+      tags:
+      - Obras
+      summary: Atualiza uma obra
+      description: Campos não enviados permanecem inalterados. O objeto `acervo`, se enviado, substitui o anterior por inteiro.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - titulo
+              - ano
+              - artistaId
+              properties:
+                titulo:
+                  type: string
+                  example: Abaporu
+                tecnica:
+                  type: string
+                  example: Óleo sobre tela
+                movimento:
+                  type: string
+                  example: Modernismo
+                imagem:
+                  type: string
+                  example: https://exemplo.com/abaporu.jpg
+                ano:
+                  type: integer
+                  example: 1928
+                artistaId:
+                  type: string
+                  example: 665f1a2b3c4d5e6f7a8b9c01
+                acervo:
+                  type: object
+                  required:
+                  - instituicao
+                  properties:
+                    instituicao:
+                      type: string
+                      example: MASP
+                    localizacao:
+                      type: string
+                      example: São Paulo, SP
+                    formaAquisicao:
+                      type: string
+                      example: Doação
+                    anoAquisicao:
+                      type: integer
+                      example: 1947
+                    _id:
+                      type: string
+                      readOnly: true
+                      example: 6ac040fa4aa555444559f914
+      responses:
+        200:
+          description: Obra atualizado(a) com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  obra:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 665f1a2b3c4d5e6f7a8b9d01
+                      titulo:
+                        type: string
+                        example: Abaporu
+                      tecnica:
+                        type: string
+                        example: Óleo sobre tela
+                      movimento:
+                        type: string
+                        example: Modernismo
+                      imagem:
+                        type: string
+                        example: https://exemplo.com/abaporu.jpg
+                      ano:
+                        type: integer
+                        example: 1928
+                      artistaId:
+                        type: string
+                        example: 665f1a2b3c4d5e6f7a8b9c01
+                      acervo:
+                        type: object
+                        required:
+                        - instituicao
+                        properties:
+                          instituicao:
+                            type: string
+                            example: MASP
+                          localizacao:
+                            type: string
+                            example: São Paulo, SP
+                          formaAquisicao:
+                            type: string
+                            example: Doação
+                          anoAquisicao:
+                            type: integer
+                            example: 1947
+                          _id:
+                            type: string
+                            readOnly: true
+                            example: 6ac040fa4aa555444559f914
+                    required:
+                    - titulo
+                    - ano
+                    - artistaId
+        400:
+          description: Dados inválidos (campo obrigatório ausente, tipo errado ou ID inválido)
+        404:
+          description: Registro não encontrado
+        500:
+          description: Erro interno do servidor
+    delete:
+      tags:
+      - Obras
+      summary: Remove uma obra
+      responses:
+        204:
+          description: Removido (sem corpo)
+        400:
+          description: ID em formato inválido
+        404:
+          description: Registro não encontrado
+        500:
+          description: Erro interno do servidor
+  /artista:
+    get:
+      tags:
+      - Artistas
+      summary: Lista todos os artistas
+      responses:
+        200:
+          description: Lista de artistas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  artistas:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 665f1a2b3c4d5e6f7a8b9c01
+                        nome:
+                          type: string
+                          example: Tarsila do Amaral
+                        cidadeNatal:
+                          type: string
+                          example: Capivari
+                        nascimento:
+                          type: string
+                          format: date
+                          example: '1886-09-01'
+                        morte:
+                          type: string
+                          format: date
+                          example: '1973-01-17'
+                      required:
+                      - nome
+        500:
+          description: Erro interno do servidor
+    post:
+      tags:
+      - Artistas
+      summary: Cadastra um artista
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - nome
+              properties:
+                nome:
+                  type: string
+                  example: Tarsila do Amaral
+                cidadeNatal:
+                  type: string
+                  example: Capivari
+                nascimento:
+                  type: string
+                  format: date
+                  example: '1886-09-01'
+                morte:
+                  type: string
+                  format: date
+                  example: '1973-01-17'
+      responses:
+        201:
+          description: Artista criado com sucesso
+        400:
+          description: Dados inválidos (campo obrigatório ausente, tipo errado ou ID inválido)
+        500:
+          description: Erro interno do servidor
+  /artista/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: ID do registro (ObjectId do MongoDB)
+    get:
+      tags:
+      - Artistas
+      summary: Busca um artista pelo ID
+      responses:
+        200:
+          description: Encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  artista:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 665f1a2b3c4d5e6f7a8b9c01
+                      nome:
+                        type: string
+                        example: Tarsila do Amaral
+                      cidadeNatal:
+                        type: string
+                        example: Capivari
+                      nascimento:
+                        type: string
+                        format: date
+                        example: '1886-09-01'
+                      morte:
+                        type: string
+                        format: date
+                        example: '1973-01-17'
+                    required:
+                    - nome
+        400:
+          description: ID em formato inválido
+        404:
+          description: Registro não encontrado
+        500:
+          description: Erro interno do servidor
+    put:
+      tags:
+      - Artistas
+      summary: Atualiza um artista
+      description: Campos não enviados permanecem inalterados.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - nome
+              properties:
+                nome:
+                  type: string
+                  example: Tarsila do Amaral
+                cidadeNatal:
+                  type: string
+                  example: Capivari
+                nascimento:
+                  type: string
+                  format: date
+                  example: '1886-09-01'
+                morte:
+                  type: string
+                  format: date
+                  example: '1973-01-17'
+      responses:
+        200:
+          description: Artista atualizado(a) com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  artista:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 665f1a2b3c4d5e6f7a8b9c01
+                      nome:
+                        type: string
+                        example: Tarsila do Amaral
+                      cidadeNatal:
+                        type: string
+                        example: Capivari
+                      nascimento:
+                        type: string
+                        format: date
+                        example: '1886-09-01'
+                      morte:
+                        type: string
+                        format: date
+                        example: '1973-01-17'
+                    required:
+                    - nome
+        400:
+          description: Dados inválidos (campo obrigatório ausente, tipo errado ou ID inválido)
+        404:
+          description: Registro não encontrado
+        500:
+          description: Erro interno do servidor
+    delete:
+      tags:
+      - Artistas
+      summary: Remove um artista
+      responses:
+        204:
+          description: Removido (sem corpo)
+        400:
+          description: ID em formato inválido
+        404:
+          description: Registro não encontrado
+        500:
+          description: Erro interno do servidor

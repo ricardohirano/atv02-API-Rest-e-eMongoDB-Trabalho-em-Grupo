@@ -4,7 +4,7 @@ API REST de um **catálogo de museu digital**, que permite cadastrar, consultar,
 
 Projeto da **Atividade 02 – API Rest e MongoDB** (Fatec Registro – DSM – Desenvolvimento Web III – Prof. Diego Max).
 
-**Equipe:** [Nome 1], [Nome 2], [Nome 3]
+**Equipe:** Camile Vitória Marques Dias,  Lorenzo Lopes David e Ricardo Kaeriyama Hirano
 
 ---
 
@@ -98,12 +98,12 @@ Rota → Controller → Service → Model → MongoDB Atlas
 ### 1. Pré-requisitos
 
 - Node.js 18 ou superior
-- Uma conta no [MongoDB Atlas](https://www.mongodb.com/atlas) com um cluster, um usuário de banco e o IP da sua máquina liberado em **Network Access**
+- Uma conta no [MongoDB Atlas](https://www.mongodb.com/atlas) com um cluster, um usuário de banco e o IP da sua máquina liberado em **Network Access** ou o arquivo .env ja configurado 
 
 ### 2. Clonar e instalar
 
 ```bash
-git clone [URL-DO-REPOSITORIO]
+git clone https://github.com/ricardohirano/atv02-API-Rest-e-eMongoDB-Trabalho-em-Grupo.git
 cd [NOME-DA-PASTA]
 npm install
 ```
@@ -258,5 +258,5 @@ Enviando uma obra sem `titulo`:
 
 ## Protótipo e apresentação
 
-- Protótipo no Figma: [link do Figma]
+- Protótipo no Figma: https://www.figma.com/design/wvzAsjJgASrdK9o62sT7lg/Untitled?node-id=0-1&t=0hDHCsPt8woweke6-1
 - Slides: [link dos slides]

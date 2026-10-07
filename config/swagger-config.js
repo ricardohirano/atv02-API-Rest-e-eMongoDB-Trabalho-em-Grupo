@@ -13,7 +13,18 @@ const swaggerOptions = {
       },
     },
     servers: [{ url: `http://localhost:${process.env.PORT || 3000}` }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
     tags: [
+      { name: "Auth", description: "Login (gera o token JWT)" },
+      { name: "Usuários", description: "Cadastro e gerenciamento de usuários" },
       { name: "Obras", description: "Operações sobre obras de arte" },
       { name: "Artistas", description: "Operações sobre artistas" },
     ],

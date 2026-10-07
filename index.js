@@ -3,6 +3,7 @@ import express from "express"
 import "./config/db-connection.js"
 import obraRoutes from "./routes/obraRoutes.js"
 import artistaRoutes from "./routes/artistaRoutes.js"
+import usuarioRoutes from "./routes/usuarioRoutes.js"
 import swaggerUi from "swagger-ui-express"
 import swaggerJsDoc from "swagger-jsdoc"
 import swaggerOptions from "./config/swagger-config.js"
@@ -16,6 +17,7 @@ app.use(express.json())
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 app.use("/", obraRoutes)
 app.use("/", artistaRoutes)
+app.use("/", usuarioRoutes)
 
 // Rota de teste, só para confirmar que o servidor está no ar
 app.get("/", (req, res) => {

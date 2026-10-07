@@ -1,9 +1,248 @@
 paths:
+  /auth:
+    post:
+      tags:
+      - Auth
+      summary: Autentica um usuário e retorna um token JWT
+      description: 'Rota pública. O token retornado vale por 24 horas e deve ser enviado nas demais rotas no cabeçalho `Authorization: Bearer <token>` (botão **Authorize**). O perfil (admin ou consumidor) fica gravado dentro do token no momento do login.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - senha
+              properties:
+                email:
+                  type: string
+                  example: ricardo@email.com
+                senha:
+                  type: string
+                  example: '123456'
+      responses:
+        200:
+          description: Token JWT retornado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        400:
+          description: Email e senha são obrigatórios
+        401:
+          description: Senha inválida
+        404:
+          description: Usuário não encontrado
+        500:
+          description: Erro interno do servidor
+  /usuario:
+    post:
+      tags:
+      - Usuários
+      summary: Cadastra um novo usuário
+      description: 'Rota pública. O usuário sempre é criado com perfil **consumidor**: o campo `perfil`, se enviado, é ignorado. O primeiro administrador é promovido manualmente no banco de dados.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - nome
+              - email
+              - senha
+              properties:
+                nome:
+                  type: string
+                  example: Ricardo
+                email:
+                  type: string
+                  example: ricardo@email.com
+                senha:
+                  type: string
+                  example: '123456'
+      responses:
+        201:
+          description: Usuário cadastrado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 6ac6706fa7c58396d877575f
+                      nome:
+                        type: string
+                        example: Ricardo
+                      email:
+                        type: string
+                        example: ricardo@email.com
+                      perfil:
+                        type: string
+                        enum:
+                        - admin
+                        - consumidor
+                        example: consumidor
+                      senha:
+                        type: string
+                        description: Senha armazenada em hash (bcrypt), nunca em texto puro
+                        example: $2b$10$AHbokmpZq75WJkgF8FDY4ec.wjrLKKMsrA7rJFVKl.nnyYLk9eQ.i
+                      __v:
+                        type: integer
+                        example: 0
+        400:
+          description: Dados inválidos (nome, e-mail ou senha ausentes)
+        409:
+          description: E-mail já cadastrado
+        500:
+          description: Erro interno do servidor
+  /usuario/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: ID do usuário (ObjectId do MongoDB)
+    get:
+      tags:
+      - Usuários
+      summary: Busca um usuário pelo ID
+      description: Requer token JWT com perfil **admin**. A senha nunca é retornada.
+      security:
+      - bearerAuth: []
+      responses:
+        200:
+          description: Encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 6ac6706fa7c58396d877575f
+                      nome:
+                        type: string
+                        example: Ricardo
+                      email:
+                        type: string
+                        example: ricardo@email.com
+                      perfil:
+                        type: string
+                        enum:
+                        - admin
+                        - consumidor
+                        example: consumidor
+        400:
+          description: ID em formato inválido
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
+        404:
+          description: Usuário não encontrado
+        500:
+          description: Erro interno do servidor
+    put:
+      tags:
+      - Usuários
+      summary: Atualiza um usuário
+      description: Requer token JWT com perfil **admin**. Campos não enviados permanecem inalterados. Se a senha for enviada, é gravada em hash. O campo `perfil` não pode ser alterado por esta rota.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Ricardo Silva
+                email:
+                  type: string
+                  example: ricardo@email.com
+                senha:
+                  type: string
+                  example: novaSenha123
+      responses:
+        200:
+          description: Usuário atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 6ac6706fa7c58396d877575f
+                      nome:
+                        type: string
+                        example: Ricardo
+                      email:
+                        type: string
+                        example: ricardo@email.com
+                      perfil:
+                        type: string
+                        enum:
+                        - admin
+                        - consumidor
+                        example: consumidor
+        400:
+          description: Dados inválidos (campo vazio) ou ID em formato inválido
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
+        404:
+          description: Usuário não encontrado
+        500:
+          description: Erro interno do servidor
+    delete:
+      tags:
+      - Usuários
+      summary: Remove um usuário
+      description: Requer token JWT com perfil **admin**.
+      security:
+      - bearerAuth: []
+      responses:
+        204:
+          description: Removido (sem corpo)
+        400:
+          description: ID em formato inválido
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
+        404:
+          description: Usuário não encontrado
+        500:
+          description: Erro interno do servidor
   /obra:
     get:
       tags:
       - Obras
       summary: Lista todas as obras
+      description: Requer token JWT (perfil **admin** ou **consumidor**).
+      security:
+      - bearerAuth: []
       responses:
         200:
           description: Lista de obras
@@ -63,12 +302,17 @@ paths:
                       - titulo
                       - ano
                       - artistaId
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
         500:
           description: Erro interno do servidor
     post:
       tags:
       - Obras
       summary: Cadastra uma obra
+      description: Requer token JWT com perfil **admin**.
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -124,6 +368,10 @@ paths:
           description: Obra criada com sucesso
         400:
           description: Dados inválidos (campo obrigatório ausente, tipo errado ou ID inválido)
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
         500:
           description: Erro interno do servidor
   /obra/{id}:
@@ -138,6 +386,9 @@ paths:
       tags:
       - Obras
       summary: Busca uma obra pelo ID
+      description: Requer token JWT (perfil **admin** ou **consumidor**).
+      security:
+      - bearerAuth: []
       responses:
         200:
           description: Encontrado com sucesso
@@ -197,6 +448,8 @@ paths:
                     - artistaId
         400:
           description: ID em formato inválido
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
         404:
           description: Registro não encontrado
         500:
@@ -205,7 +458,9 @@ paths:
       tags:
       - Obras
       summary: Atualiza uma obra
-      description: Campos não enviados permanecem inalterados. O objeto `acervo`, se enviado, substitui o anterior por inteiro.
+      description: Campos não enviados permanecem inalterados. O objeto `acervo`, se enviado, substitui o anterior por inteiro. Requer token JWT com perfil **admin**.
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -315,6 +570,10 @@ paths:
                     - artistaId
         400:
           description: Dados inválidos (campo obrigatório ausente, tipo errado ou ID inválido)
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
         404:
           description: Registro não encontrado
         500:
@@ -323,11 +582,18 @@ paths:
       tags:
       - Obras
       summary: Remove uma obra
+      description: Requer token JWT com perfil **admin**.
+      security:
+      - bearerAuth: []
       responses:
         204:
           description: Removido (sem corpo)
         400:
           description: ID em formato inválido
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
         404:
           description: Registro não encontrado
         500:
@@ -337,6 +603,9 @@ paths:
       tags:
       - Artistas
       summary: Lista todos os artistas
+      description: Requer token JWT (perfil **admin** ou **consumidor**).
+      security:
+      - bearerAuth: []
       responses:
         200:
           description: Lista de artistas
@@ -369,12 +638,17 @@ paths:
                           example: '1973-01-17'
                       required:
                       - nome
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
         500:
           description: Erro interno do servidor
     post:
       tags:
       - Artistas
       summary: Cadastra um artista
+      description: Requer token JWT com perfil **admin**.
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -403,6 +677,10 @@ paths:
           description: Artista criado com sucesso
         400:
           description: Dados inválidos (campo obrigatório ausente, tipo errado ou ID inválido)
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
         500:
           description: Erro interno do servidor
   /artista/{id}:
@@ -417,6 +695,9 @@ paths:
       tags:
       - Artistas
       summary: Busca um artista pelo ID
+      description: Requer token JWT (perfil **admin** ou **consumidor**).
+      security:
+      - bearerAuth: []
       responses:
         200:
           description: Encontrado com sucesso
@@ -449,6 +730,8 @@ paths:
                     - nome
         400:
           description: ID em formato inválido
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
         404:
           description: Registro não encontrado
         500:
@@ -457,7 +740,9 @@ paths:
       tags:
       - Artistas
       summary: Atualiza um artista
-      description: Campos não enviados permanecem inalterados.
+      description: Campos não enviados permanecem inalterados. Requer token JWT com perfil **admin**.
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -513,6 +798,10 @@ paths:
                     - nome
         400:
           description: Dados inválidos (campo obrigatório ausente, tipo errado ou ID inválido)
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
         404:
           description: Registro não encontrado
         500:
@@ -521,11 +810,18 @@ paths:
       tags:
       - Artistas
       summary: Remove um artista
+      description: Requer token JWT com perfil **admin**.
+      security:
+      - bearerAuth: []
       responses:
         204:
           description: Removido (sem corpo)
         400:
           description: ID em formato inválido
+        401:
+          description: 'Não autenticado: token não informado ou inválido (ex.: Token não informado, Token invalido)'
+        403:
+          description: 'Acesso negado: apenas administradores'
         404:
           description: Registro não encontrado
         500:
